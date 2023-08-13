@@ -1,5 +1,5 @@
 const express = require('express')
-import cors from 'cors'
+const cors = require('cors')
 const app = express()
 const PORT = 4000
 import { query } from './db'
