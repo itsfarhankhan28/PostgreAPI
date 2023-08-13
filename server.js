@@ -2,7 +2,8 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const PORT = 4000
-import { query } from './db'
+// import { query } from './db'
+const pool = require('./db')
 
 //middleware
 app.use(cors())
@@ -14,7 +15,7 @@ app.use(json())
 app.post('/create',async(req,res)=>{
     try{
         const {description} = req.body
-        const newpost = await query("INSERT INTO server (description) VALUES($1) RETURNING *",[description])
+        const newpost = await pool.query("INSERT INTO server (description) VALUES($1) RETURNING *",[description])
         res.json(newpost.rows[0])
     }catch(err){
         console.log(err)
@@ -24,7 +25,7 @@ app.post('/create',async(req,res)=>{
 //get all
 app.get('/get',async(req,res)=>{
     try{
-        const getpost = await query("SELECT * FROM server")
+        const getpost = await pool.query("SELECT * FROM server")
         res.json(getpost.rows)
     }catch(err){
         console.log(err)
@@ -35,7 +36,7 @@ app.get('/get',async(req,res)=>{
 app.get('/get/:id',async(req,res)=>{
     try{
         const {id} = req.params;
-        const singlepost = await query("SELECT * FROM server WHERE server_id = $1",[id])
+        const singlepost = await pool.query("SELECT * FROM server WHERE server_id = $1",[id])
         res.json(singlepost.rows)
     }catch(err){
         console.log(err)
@@ -47,7 +48,7 @@ app.put('/update/:id',async(req,res)=>{
     try{
         const {id} = req.params
         const {description} = req.body
-        const updatepost = await query("UPDATE server SET description = $1 WHERE server_id = $2",[description,id])
+        const updatepost = await pool.query("UPDATE server SET description = $1 WHERE server_id = $2",[description,id])
         res.json("Post updated successfully")
     }catch(err){
         console.log(err)
@@ -58,7 +59,7 @@ app.put('/update/:id',async(req,res)=>{
 app.delete('/delete/:id',async(req,res)=>{
     try{
         const {id} = req.params
-        const deletepost = await query("DELETE FROM server WHERE server_id = $1",[id])
+        const deletepost = await pool.query("DELETE FROM server WHERE server_id = $1",[id])
         res.json("deleted sucessfully")
     }catch(err){
         console.log(err)
