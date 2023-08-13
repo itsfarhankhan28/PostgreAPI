@@ -1,4 +1,4 @@
-import express, { json } from 'express'
+const express = require('express')
 import cors from 'cors'
 const app = express()
 const PORT = 4000
